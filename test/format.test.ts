@@ -5,6 +5,7 @@ import {
   truncateAddress,
   truncateHash,
   formatDuration,
+  formatTimestamp,
   isTerminalState,
   canDispute,
   canClaimTimeout,
@@ -17,6 +18,7 @@ describe("Formatting and Conversion Utilities", () => {
     expect(formatStroops(15_500_000n)).toBe("1.55");
     expect(formatStroops(100n)).toBe("0.00001");
     expect(formatStroops(0n)).toBe("0");
+    expect(formatStroops(-10_000_000n)).toBe("-1");
     expect(formatStroops("500000000")).toBe("50");
   });
 
@@ -47,9 +49,18 @@ describe("Formatting and Conversion Utilities", () => {
 
   it("formats second durations into readable strings", () => {
     expect(formatDuration(0)).toBe("0s");
+    expect(formatDuration(-10)).toBe("0s");
     expect(formatDuration(45)).toBe("45s");
     expect(formatDuration(3600)).toBe("1h");
+    expect(formatDuration(3665)).toBe("1h 1m");
     expect(formatDuration(90000)).toBe("1d 1h");
+  });
+
+  it("handles formatTimestamp edge cases", () => {
+    expect(formatTimestamp(undefined)).toBe("N/A");
+    expect(formatTimestamp(0)).toBe("N/A");
+    expect(formatTimestamp(-100n)).toBe("N/A");
+    expect(formatTimestamp(1700000000)).toContain("2023");
   });
 
   it("correctly flags terminal states", () => {
@@ -94,6 +105,34 @@ describe("State Machine Timeout & Dispute Rules", () => {
       arbiter: { type: "None" },
     };
     expect(canDispute(noArbiterEscrow, 150_000n)).toBe(false);
+  });
+
+  it("rejects dispute if escrow is not in Delivered state or missing deliveredAt", () => {
+    const createdEscrow: EscrowRecord = {
+      ...baseEscrow,
+      state: "Funded",
+    };
+    expect(canDispute(createdEscrow, 150_000n)).toBe(false);
+
+    const missingDeliveryTimeEscrow: EscrowRecord = {
+      ...baseEscrow,
+      deliveredAt: undefined,
+    };
+    expect(canDispute(missingDeliveryTimeEscrow, 150_000n)).toBe(false);
+  });
+
+  it("rejects timeout claim if escrow is not in Delivered state or missing deliveredAt", () => {
+    const releasedEscrow: EscrowRecord = {
+      ...baseEscrow,
+      state: "Released",
+    };
+    expect(canClaimTimeout(releasedEscrow, 200_000n)).toBe(false);
+
+    const missingDeliveryTimeEscrow: EscrowRecord = {
+      ...baseEscrow,
+      deliveredAt: undefined,
+    };
+    expect(canClaimTimeout(missingDeliveryTimeEscrow, 200_000n)).toBe(false);
   });
 
   it("allows timeout claim only after confirm window elapses", () => {
