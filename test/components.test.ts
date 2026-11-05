@@ -3,30 +3,40 @@ import { badgeVariants } from "../components/ui/badge";
 import { buttonVariants } from "../components/ui/button";
 
 describe("UI Primitives Variant Classes", () => {
-  it("renders expected button variant classes", () => {
-    const defaultBtn = buttonVariants({ variant: "default", size: "default" });
-    expect(defaultBtn).toContain("bg-blue-600");
-    expect(defaultBtn).toContain("h-9");
-
-    const outlineBtn = buttonVariants({ variant: "outline", size: "sm" });
-    expect(outlineBtn).toContain("border");
-    expect(outlineBtn).toContain("h-8");
-
-    const destructiveBtn = buttonVariants({ variant: "destructive" });
-    expect(destructiveBtn).toContain("bg-red-600");
+  it("renders all button variants correctly", () => {
+    expect(buttonVariants({ variant: "default" })).toContain("bg-blue-600");
+    expect(buttonVariants({ variant: "destructive" })).toContain("bg-red-600");
+    expect(buttonVariants({ variant: "outline" })).toContain("border");
+    expect(buttonVariants({ variant: "secondary" })).toContain("bg-neutral-200");
+    expect(buttonVariants({ variant: "ghost" })).toContain("hover:bg-neutral-100");
+    expect(buttonVariants({ variant: "link" })).toContain("underline-offset-4");
   });
 
-  it("renders expected badge variant classes", () => {
-    const defaultBadge = badgeVariants({ variant: "default" });
-    expect(defaultBadge).toContain("bg-blue-600");
+  it("renders all button sizes correctly", () => {
+    expect(buttonVariants({ size: "default" })).toContain("h-9");
+    expect(buttonVariants({ size: "sm" })).toContain("h-8");
+    expect(buttonVariants({ size: "lg" })).toContain("h-10");
+    expect(buttonVariants({ size: "icon" })).toContain("w-9");
+  });
 
-    const successBadge = badgeVariants({ variant: "success" });
-    expect(successBadge).toContain("bg-emerald-600");
+  it("supports className overrides in buttonVariants", () => {
+    const custom = buttonVariants({ variant: "default", className: "custom-class" });
+    expect(custom).toContain("custom-class");
+    expect(custom).toContain("bg-blue-600");
+  });
 
-    const warningBadge = badgeVariants({ variant: "warning" });
-    expect(warningBadge).toContain("bg-amber-500");
+  it("renders all badge variants correctly", () => {
+    expect(badgeVariants({ variant: "default" })).toContain("bg-blue-600");
+    expect(badgeVariants({ variant: "secondary" })).toContain("bg-neutral-100");
+    expect(badgeVariants({ variant: "destructive" })).toContain("bg-red-600");
+    expect(badgeVariants({ variant: "success" })).toContain("bg-emerald-600");
+    expect(badgeVariants({ variant: "warning" })).toContain("bg-amber-500");
+    expect(badgeVariants({ variant: "outline" })).toContain("border-neutral-300");
+  });
 
-    const destructiveBadge = badgeVariants({ variant: "destructive" });
-    expect(destructiveBadge).toContain("bg-red-600");
+  it("supports className overrides in badgeVariants", () => {
+    const custom = badgeVariants({ variant: "success", className: "extra-badge" });
+    expect(custom).toContain("extra-badge");
+    expect(custom).toContain("bg-emerald-600");
   });
 });
