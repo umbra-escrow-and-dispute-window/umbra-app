@@ -1,0 +1,36 @@
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+function cn(...inputs: (string | undefined | null | false)[]) {
+  return twMerge(clsx(inputs));
+}
+
+export const badgeVariants = cva(
+  "inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  {
+    variants: {
+      variant: {
+        default: "border-transparent bg-blue-600 text-white shadow hover:bg-blue-700",
+        secondary:
+          "border-transparent bg-neutral-100 text-neutral-900 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-100",
+        destructive: "border-transparent bg-red-600 text-white shadow hover:bg-red-700",
+        success: "border-transparent bg-emerald-600 text-white shadow hover:bg-emerald-700",
+        warning: "border-transparent bg-amber-500 text-white shadow hover:bg-amber-600",
+        outline:
+          "text-neutral-900 dark:text-neutral-100 border-neutral-300 dark:border-neutral-700",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
+
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
+
+export function Badge({ className, variant, ...props }: BadgeProps) {
+  return <div className={cn(badgeVariants({ variant }), className)} {...props} />;
+}
