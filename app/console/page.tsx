@@ -185,7 +185,7 @@ export default function ConsolePage() {
             <div className="py-12 text-center">
               <p className="text-neutral-500 font-medium">No escrows found for connected account</p>
               <p className="text-xs text-neutral-400 mt-1">
-                Switch account persona above or click "+ Create Escrow" to begin.
+                Switch account persona above or click &quot;+ Create Escrow&quot; to begin.
               </p>
             </div>
           ) : (
