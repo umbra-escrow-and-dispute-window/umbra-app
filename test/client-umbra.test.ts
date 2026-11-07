@@ -15,7 +15,10 @@ describe("UmbraClientStore State Machine Transitions", () => {
     confirmWindow: 86_400n,
     disputeWindow: 86_400n,
     state: "Funded",
-    arbiter: { type: "Single", address: "GARB4W2N3M5L6K7J8H9G0F1E2D3C4B5A6B7C8D9E0F1A2B3C4D5E6F7A" },
+    arbiter: {
+      type: "Single",
+      address: "GARB4W2N3M5L6K7J8H9G0F1E2D3C4B5A6B7C8D9E0F1A2B3C4D5E6F7A",
+    },
     termsHash: "terms-hash-100",
   };
 
@@ -80,7 +83,9 @@ describe("UmbraClientStore State Machine Transitions", () => {
   it("allows seller to claim timeout after confirm window elapses", () => {
     store.markDelivered("100", "proof-hash-100", 1_000_000n);
     // Before confirm window elapses
-    expect(() => store.claimTimeout("100", 1_050_000n)).toThrow("Confirm window has not elapsed yet");
+    expect(() => store.claimTimeout("100", 1_050_000n)).toThrow(
+      "Confirm window has not elapsed yet",
+    );
     // After confirm window (1_086_400n+)
     const claimed = store.claimTimeout("100", 1_086_401n);
     expect(claimed.state).toBe("Released");

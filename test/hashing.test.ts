@@ -13,7 +13,9 @@ describe("Document Hashing & Verification", () => {
   it("validates 64-char sha256 hex strings", () => {
     expect(isValidSha256Hex("")).toBe(false);
     expect(isValidSha256Hex("short")).toBe(false);
-    expect(isValidSha256Hex("not-hex-chars-are-definitely-invalid-length-check-64-characters-ok")).toBe(false);
+    expect(
+      isValidSha256Hex("not-hex-chars-are-definitely-invalid-length-check-64-characters-ok"),
+    ).toBe(false);
 
     const valid = "2af58aaebdd51405926baeb472bb7dd8a75163636bdaa084c6766e1c65052d72";
     expect(isValidSha256Hex(valid)).toBe(true);

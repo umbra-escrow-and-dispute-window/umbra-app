@@ -187,6 +187,8 @@ describe("State Machine Timeout & Dispute Rules", () => {
   it("formats dispute verdicts clearly", () => {
     expect(formatVerdict({ type: "RefundBuyer" })).toBe("Full Refund to Buyer");
     expect(formatVerdict({ type: "ReleaseSeller" })).toBe("Full Release to Seller");
-    expect(formatVerdict({ type: "Split", buyerBps: 6000 })).toBe("Split (60.00% Buyer / 40.00% Seller)");
+    expect(formatVerdict({ type: "Split", buyerBps: 6000 })).toBe(
+      "Split (60.00% Buyer / 40.00% Seller)",
+    );
   });
 });

@@ -22,10 +22,7 @@ class UmbraClientStore {
   /**
    * List escrows with optional search and status filtering.
    */
-  public listEscrows(filter?: {
-    status?: string;
-    search?: string;
-  }): EscrowRecord[] {
+  public listEscrows(filter?: { status?: string; search?: string }): EscrowRecord[] {
     let result = [...this.escrows];
 
     if (filter?.status && filter.status !== "All") {

@@ -213,7 +213,9 @@ export function formatArbiterInfo(arbiter: {
     case "None":
       return "No Arbiter";
     case "Single":
-      return arbiter.address ? `Single Arbiter (${truncateAddress(arbiter.address)})` : "Single Arbiter";
+      return arbiter.address
+        ? `Single Arbiter (${truncateAddress(arbiter.address)})`
+        : "Single Arbiter";
     case "Panel":
       return `Panel (${arbiter.threshold || 0}/${arbiter.members?.length || 0})`;
     case "Signed":
@@ -242,4 +244,3 @@ export function formatVerdict(verdict: {
       return verdict.type;
   }
 }
-
