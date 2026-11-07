@@ -6,17 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import {
-  verifyDocument,
-  parseRawDocumentInput,
-  canonicalize,
-  DOMAIN,
-} from "@/lib/hashing";
+import { verifyDocument, parseRawDocumentInput, canonicalize, DOMAIN } from "@/lib/hashing";
 
 function VerifyContent() {
   const searchParams = useSearchParams();
   const initialHash = searchParams?.get("hash") || "";
-  const initialKind = searchParams?.get("kind") as "terms" | "deliveryProof" | "disputeReason" | null;
+  const initialKind = searchParams?.get("kind") as
+    "terms" | "deliveryProof" | "disputeReason" | null;
 
   const [kind, setKind] = useState<"terms" | "deliveryProof" | "disputeReason">(
     initialKind || "terms",
@@ -71,7 +67,8 @@ function VerifyContent() {
         <CardHeader>
           <CardTitle>Document Verification Parameters</CardTitle>
           <CardDescription>
-            Conforms strictly to Umbra specification RFC 8785 JSON canonicalization and domain separation.
+            Conforms strictly to Umbra specification RFC 8785 JSON canonicalization and domain
+            separation.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -156,7 +153,9 @@ function VerifyContent() {
 
       {/* Verification Result */}
       {result && (
-        <Card className={`border-2 ${result.match ? "border-emerald-500/50" : "border-neutral-800"}`}>
+        <Card
+          className={`border-2 ${result.match ? "border-emerald-500/50" : "border-neutral-800"}`}
+        >
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="text-base font-semibold">Verification Result</CardTitle>
@@ -189,7 +188,9 @@ function VerifyContent() {
             )}
 
             <div>
-              <p className="font-sans font-semibold text-neutral-500 uppercase">Canonical Payload Representation</p>
+              <p className="font-sans font-semibold text-neutral-500 uppercase">
+                Canonical Payload Representation
+              </p>
               <pre className="p-2 mt-1 rounded bg-neutral-100 dark:bg-neutral-900 overflow-x-auto text-neutral-600 dark:text-neutral-400">
                 {result.canonicalJson}
               </pre>

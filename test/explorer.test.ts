@@ -9,9 +9,7 @@ describe("Escrow Explorer Filtering Logic", () => {
     const disputed = SEED_ESCROWS.filter((e) => e.state === "Disputed");
     const resolved = SEED_ESCROWS.filter(
       (e) =>
-        e.state === "ResolvedBuyer" ||
-        e.state === "ResolvedSeller" ||
-        e.state === "ResolvedSplit",
+        e.state === "ResolvedBuyer" || e.state === "ResolvedSeller" || e.state === "ResolvedSplit",
     );
 
     expect(funded.length).toBeGreaterThan(0);

@@ -68,9 +68,7 @@ export function EscrowExplorer({ initialEscrows }: EscrowExplorerProps) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <CardTitle className="text-xl">Escrow Directory</CardTitle>
-            <CardDescription>
-              Browse live and past escrows on Stellar Testnet.
-            </CardDescription>
+            <CardDescription>Browse live and past escrows on Stellar Testnet.</CardDescription>
           </div>
           <div className="w-full sm:w-72">
             <Input
@@ -142,13 +140,9 @@ export function EscrowExplorer({ initialEscrows }: EscrowExplorerProps) {
                     >
                       <td className="py-3 px-2 font-mono font-medium">#{escrow.id}</td>
                       <td className="py-3 px-2">
-                        <Badge variant={getStateBadgeVariant(escrow.state)}>
-                          {escrow.state}
-                        </Badge>
+                        <Badge variant={getStateBadgeVariant(escrow.state)}>{escrow.state}</Badge>
                       </td>
-                      <td className="py-3 px-2 font-semibold">
-                        {formatStroops(escrow.amount)}
-                      </td>
+                      <td className="py-3 px-2 font-semibold">{formatStroops(escrow.amount)}</td>
                       <td className="py-3 px-2 font-mono text-xs text-neutral-500">
                         {truncateAddress(escrow.buyer)}
                       </td>

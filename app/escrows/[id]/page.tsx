@@ -28,10 +28,14 @@ export default async function EscrowDetailPage({ params }: EscrowDetailPageProps
   }
 
   const nowTimestamp = BigInt(Math.floor(Date.now() / 1000));
-  const disputeDeadline = escrow.deliveredAt ? escrow.deliveredAt + escrow.disputeWindow : undefined;
+  const disputeDeadline = escrow.deliveredAt
+    ? escrow.deliveredAt + escrow.disputeWindow
+    : undefined;
   const disputeCountdown = disputeDeadline ? getTimeRemaining(disputeDeadline, nowTimestamp) : null;
 
-  const confirmDeadline = escrow.deliveredAt ? escrow.deliveredAt + escrow.confirmWindow : undefined;
+  const confirmDeadline = escrow.deliveredAt
+    ? escrow.deliveredAt + escrow.confirmWindow
+    : undefined;
   const confirmCountdown = confirmDeadline ? getTimeRemaining(confirmDeadline, nowTimestamp) : null;
 
   // Lifecycle progression stages
@@ -62,12 +66,8 @@ export default async function EscrowDetailPage({ params }: EscrowDetailPageProps
             &larr; Back to Directory
           </Link>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-              Escrow #{escrow.id}
-            </h1>
-            <Badge variant={getStateBadgeVariant(escrow.state)}>
-              {escrow.state}
-            </Badge>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Escrow #{escrow.id}</h1>
+            <Badge variant={getStateBadgeVariant(escrow.state)}>{escrow.state}</Badge>
           </div>
         </div>
 
@@ -193,7 +193,9 @@ export default async function EscrowDetailPage({ params }: EscrowDetailPageProps
                 <span>{formatDuration(escrow.confirmWindow)}</span>
                 {confirmCountdown && (
                   <span className="text-xs font-mono text-neutral-400">
-                    {confirmCountdown.expired ? "Elapsed" : `${confirmCountdown.formatted} remaining`}
+                    {confirmCountdown.expired
+                      ? "Elapsed"
+                      : `${confirmCountdown.formatted} remaining`}
                   </span>
                 )}
               </div>
@@ -205,7 +207,9 @@ export default async function EscrowDetailPage({ params }: EscrowDetailPageProps
                 <span>{formatDuration(escrow.disputeWindow)}</span>
                 {disputeCountdown && (
                   <span className="text-xs font-mono text-neutral-400">
-                    {disputeCountdown.expired ? "Elapsed" : `${disputeCountdown.formatted} remaining`}
+                    {disputeCountdown.expired
+                      ? "Elapsed"
+                      : `${disputeCountdown.formatted} remaining`}
                   </span>
                 )}
               </div>
@@ -228,7 +232,8 @@ export default async function EscrowDetailPage({ params }: EscrowDetailPageProps
         <CardHeader>
           <CardTitle className="text-base font-semibold">Off-Chain Hashes (SHA-256)</CardTitle>
           <CardDescription>
-            Cryptographic hashes stored on Stellar ledger representing off-chain agreements and evidence.
+            Cryptographic hashes stored on Stellar ledger representing off-chain agreements and
+            evidence.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 font-mono text-xs">
@@ -277,7 +282,9 @@ export default async function EscrowDetailPage({ params }: EscrowDetailPageProps
                   Verify &rarr;
                 </Link>
               </div>
-              <p className="text-neutral-600 dark:text-neutral-400 break-all">{escrow.reasonHash}</p>
+              <p className="text-neutral-600 dark:text-neutral-400 break-all">
+                {escrow.reasonHash}
+              </p>
             </div>
           )}
         </CardContent>
