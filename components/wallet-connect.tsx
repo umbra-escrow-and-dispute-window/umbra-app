@@ -155,7 +155,10 @@ export function WalletConnect({ onAccountChange, defaultRole = "Buyer" }: Wallet
               </button>
             </div>
 
-            <form onSubmit={handleCustomSubmit} className="pt-2 border-t border-neutral-200 dark:border-neutral-800 space-y-3">
+            <form
+              onSubmit={handleCustomSubmit}
+              className="pt-2 border-t border-neutral-200 dark:border-neutral-800 space-y-3"
+            >
               <label className="block text-xs font-semibold uppercase text-neutral-500">
                 Or Use Custom Address
               </label>
@@ -167,12 +170,7 @@ export function WalletConnect({ onAccountChange, defaultRole = "Buyer" }: Wallet
                 className="font-mono text-xs"
               />
               <div className="flex justify-end gap-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowModal(false)}
-                >
+                <Button type="button" variant="ghost" size="sm" onClick={() => setShowModal(false)}>
                   Cancel
                 </Button>
                 {wallet.isConnected && (

@@ -37,9 +37,13 @@ export default function ConsolePage() {
   const [disputeModalEscrow, setDisputeModalEscrow] = useState<EscrowRecord | null>(null);
 
   // New Escrow Form State
-  const [newSeller, setNewSeller] = useState("GAKF4W2N3M5L6K7J8H9G0F1E2D3C4B5A6B7C8D9E0F1A2B3C4D5E6F7A");
+  const [newSeller, setNewSeller] = useState(
+    "GAKF4W2N3M5L6K7J8H9G0F1E2D3C4B5A6B7C8D9E0F1A2B3C4D5E6F7A",
+  );
   const [newAmountXlm, setNewAmountXlm] = useState("50");
-  const [newTermsText, setNewTermsText] = useState("Full-stack Soroban escrow integration delivery");
+  const [newTermsText, setNewTermsText] = useState(
+    "Full-stack Soroban escrow integration delivery",
+  );
 
   // Proof & Dispute Modals
   const [deliveryProofText, setDeliveryProofText] = useState("");
@@ -157,15 +161,14 @@ export default function ConsolePage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Participant Console</h1>
           <p className="text-neutral-600 dark:text-neutral-400 mt-1">
-            Manage your buyer and seller escrows, submit delivery proofs, release funds, or file disputes.
+            Manage your buyer and seller escrows, submit delivery proofs, release funds, or file
+            disputes.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <WalletConnect onAccountChange={setWallet} defaultRole="Buyer" />
-          <Button onClick={() => setShowCreateModal(true)}>
-            + Create Escrow
-          </Button>
+          <Button onClick={() => setShowCreateModal(true)}>+ Create Escrow</Button>
         </div>
       </div>
 
@@ -205,7 +208,10 @@ export default function ConsolePage() {
                     const isSeller = escrow.seller.toLowerCase() === wallet.address.toLowerCase();
 
                     return (
-                      <tr key={escrow.id} className="hover:bg-neutral-50/50 dark:hover:bg-neutral-900/50">
+                      <tr
+                        key={escrow.id}
+                        className="hover:bg-neutral-50/50 dark:hover:bg-neutral-900/50"
+                      >
                         <td className="py-3 px-2 font-mono font-medium">#{escrow.id}</td>
                         <td className="py-3 px-2">
                           <Badge variant="outline" className="text-xs">
@@ -213,9 +219,7 @@ export default function ConsolePage() {
                           </Badge>
                         </td>
                         <td className="py-3 px-2">
-                          <Badge variant={getStateBadgeVariant(escrow.state)}>
-                            {escrow.state}
-                          </Badge>
+                          <Badge variant={getStateBadgeVariant(escrow.state)}>{escrow.state}</Badge>
                         </td>
                         <td className="py-3 px-2 font-semibold">
                           {formatStroops(escrow.amount)} XLM
@@ -239,15 +243,16 @@ export default function ConsolePage() {
                           )}
 
                           {/* Buyer Release Action */}
-                          {isBuyer && (escrow.state === "Funded" || escrow.state === "Delivered") && (
-                            <Button
-                              size="sm"
-                              variant="default"
-                              onClick={() => handleRelease(escrow.id)}
-                            >
-                              Release
-                            </Button>
-                          )}
+                          {isBuyer &&
+                            (escrow.state === "Funded" || escrow.state === "Delivered") && (
+                              <Button
+                                size="sm"
+                                variant="default"
+                                onClick={() => handleRelease(escrow.id)}
+                              >
+                                Release
+                              </Button>
+                            )}
 
                           {/* Buyer Dispute Action */}
                           {isBuyer && escrow.state === "Delivered" && (
@@ -349,10 +354,13 @@ export default function ConsolePage() {
       {deliveryModalEscrow && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 p-6 shadow-2xl space-y-4">
-            <h3 className="text-lg font-bold">Submit Delivery Proof (Escrow #{deliveryModalEscrow.id})</h3>
+            <h3 className="text-lg font-bold">
+              Submit Delivery Proof (Escrow #{deliveryModalEscrow.id})
+            </h3>
             <p className="text-xs text-neutral-400">
               Your delivery notes or artifact links will be hashed with domain{" "}
-              <code className="text-blue-400">umbra:delivery-proof:v1</code> and saved to the ledger.
+              <code className="text-blue-400">umbra:delivery-proof:v1</code> and saved to the
+              ledger.
             </p>
             <form onSubmit={handleDeliverySubmit} className="space-y-4">
               <textarea

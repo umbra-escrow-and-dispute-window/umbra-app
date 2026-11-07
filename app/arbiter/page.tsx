@@ -27,7 +27,9 @@ export default function ArbiterPage() {
   const [selectedEscrow, setSelectedEscrow] = useState<EscrowRecord | null>(null);
 
   // Verdict state
-  const [verdictType, setVerdictType] = useState<"RefundBuyer" | "ReleaseSeller" | "Split">("Split");
+  const [verdictType, setVerdictType] = useState<"RefundBuyer" | "ReleaseSeller" | "Split">(
+    "Split",
+  );
   const [buyerBps, setBuyerBps] = useState(5000); // 50%
 
   const refreshList = () => {
@@ -73,7 +75,8 @@ export default function ArbiterPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Arbiter Resolution Console</h1>
           <p className="text-neutral-600 dark:text-neutral-400 mt-1">
-            Review contested deliveries, inspect off-chain evidence hashes, and execute binding verdicts.
+            Review contested deliveries, inspect off-chain evidence hashes, and execute binding
+            verdicts.
           </p>
         </div>
 
@@ -87,9 +90,7 @@ export default function ArbiterPage() {
             <CardTitle className="text-base font-semibold">
               Disputed Escrows ({disputedEscrows.length})
             </CardTitle>
-            <CardDescription>
-              Awaiting adjudication by your arbiter key.
-            </CardDescription>
+            <CardDescription>Awaiting adjudication by your arbiter key.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {disputedEscrows.length === 0 ? (
@@ -298,7 +299,9 @@ export default function ArbiterPage() {
           ) : (
             <Card>
               <CardContent className="py-16 text-center text-neutral-500">
-                <p className="text-sm font-medium">Select a disputed escrow from the queue to review evidence.</p>
+                <p className="text-sm font-medium">
+                  Select a disputed escrow from the queue to review evidence.
+                </p>
               </CardContent>
             </Card>
           )}
