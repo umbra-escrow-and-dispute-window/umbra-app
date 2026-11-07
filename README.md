@@ -61,11 +61,11 @@ To optimize ledger storage costs, agreement terms, delivery artifacts, and dispu
 
 Payloads are formatted using **RFC 8785 JSON Canonicalization** and hashed with unique domain separators:
 
-| Document Type | Domain Separator | Description |
-|---|---|---|
-| **Terms** | `umbra:terms:v1` | Milestone description, deliverables, acceptance criteria |
-| **Delivery Proof** | `umbra:delivery-proof:v1` | Commit hashes, artifact links, execution proofs |
-| **Dispute Claim** | `umbra:dispute-reason:v1` | Contested points filed during dispute window |
+| Document Type      | Domain Separator          | Description                                              |
+| ------------------ | ------------------------- | -------------------------------------------------------- |
+| **Terms**          | `umbra:terms:v1`          | Milestone description, deliverables, acceptance criteria |
+| **Delivery Proof** | `umbra:delivery-proof:v1` | Commit hashes, artifact links, execution proofs          |
+| **Dispute Claim**  | `umbra:dispute-reason:v1` | Contested points filed during dispute window             |
 
 ---
 

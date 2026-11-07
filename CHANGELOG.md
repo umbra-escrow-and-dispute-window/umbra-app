@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2026-11-07
 
 ### Added
+
 - **Public Escrow Explorer:** Search, filter, and inspect live and past escrows with real-time status chips and responsive empty states.
 - **Escrow Detail Page:** Full 4-step lifecycle stepper (`Funded`, `Delivered`, `Dispute/Confirm Review`, `Settled`), party keys, asset addresses, countdown timers, and off-chain hash links.
 - **Participant Console:** Streamlined buyer and seller workspace with automated terms JSON hashing, delivery proof submissions, fund releases, dispute claims, and seller timeout claims.
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Detailed `README.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, and issue templates.
 
 ### Security
+
 - Patched Next.js to version `15.1.11` resolving critical flight protocol and authorization vulnerabilities.
 - Added RFC 4648 Base32 validation for Stellar public keys (`G...`) and Soroban contract addresses (`C...`).
 - Implemented strictly typed off-chain domain separation preventing cross-domain hash replay attacks.

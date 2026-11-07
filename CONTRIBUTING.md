@@ -7,6 +7,7 @@ Thank you for your interest in contributing to **Umbra App**! This guide outline
 ## Development Workflow
 
 1. **Fork and Clone:**
+
    ```bash
    git clone https://github.com/umbra-escrow-and-dispute-window/umbra-app.git
    cd umbra-app
@@ -14,6 +15,7 @@ Thank you for your interest in contributing to **Umbra App**! This guide outline
 
 2. **Branching:**
    Create a descriptive branch for your work:
+
    ```bash
    git checkout -b feat/my-new-feature
    # or
@@ -21,6 +23,7 @@ Thank you for your interest in contributing to **Umbra App**! This guide outline
    ```
 
 3. **Install Dependencies:**
+
    ```bash
    pnpm install
    ```
@@ -41,11 +44,13 @@ Thank you for your interest in contributing to **Umbra App**! This guide outline
 We use [Conventional Commits](https://www.conventionalcommits.org/) to maintain an automated, human-readable changelog.
 
 ### Format
+
 ```
 <type>(<scope>): <short imperative description>
 ```
 
 ### Allowed Types
+
 - `feat`: New feature or user-facing functionality
 - `fix`: Bug fix
 - `refactor`: Code change that neither fixes a bug nor adds a feature
@@ -56,6 +61,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) to maintain 
 - `ci`: Changes to CI configuration workflows
 
 ### Attribution Policy
+
 - Commits must be authored by the contributor with zero automated AI attribution trailers (`Co-authored-by` mentioning bots, `Generated with`, etc.).
 - Repository git hooks validate author identity and commit scrub.
 
@@ -73,6 +79,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) to maintain 
 ## Multi-Repository Workspace
 
 When modifying contract types or hashing logic that affects the entire protocol:
+
 1. Verify contract changes in `umbra-contracts`.
 2. Update bindings and hashing conventions in `umbra-sdk`.
 3. Link and consume changes here in `umbra-app`.
