@@ -62,7 +62,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) to maintain 
 
 ### Attribution Policy
 
-- Commits must be authored by the contributor with zero automated AI attribution trailers (`Co-authored-by` mentioning bots, `Generated with`, etc.).
+- Commits must be authored directly by the contributor with zero automated attribution trailers or synthetic author tags.
 - Repository git hooks validate author identity and commit scrub.
 
 ---
