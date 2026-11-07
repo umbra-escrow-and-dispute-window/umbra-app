@@ -10,20 +10,30 @@ import {
 describe("Input Validation Utilities", () => {
   it("validates Stellar G... public keys", () => {
     expect(isValidStellarPublicKey("")).toBe(false);
-    expect(isValidStellarPublicKey("GAT6KAYEL7B2MCVPAUUELPNQLBWEMEW2GKOHL4JWDSSCB2YOEFOBBNA2")).toBe(true);
+    expect(
+      isValidStellarPublicKey("GAT6KAYEL7B2MCVPAUUELPNQLBWEMEW2GKOHL4JWDSSCB2YOEFOBBNA2"),
+    ).toBe(true);
     // Invalid prefix
-    expect(isValidStellarPublicKey("CAT6KAYEL7B2MCVPAUUELPNQLBWEMEW2GKOHL4JWDSSCB2YOEFOBBNA2")).toBe(false);
+    expect(
+      isValidStellarPublicKey("CAT6KAYEL7B2MCVPAUUELPNQLBWEMEW2GKOHL4JWDSSCB2YOEFOBBNA2"),
+    ).toBe(false);
     // Invalid length
     expect(isValidStellarPublicKey("GAT6KAYEL7B2M")).toBe(false);
     // Invalid characters (8 and 9 are not in RFC 4648 base32)
-    expect(isValidStellarPublicKey("GAT6KAYEL7B2MCVPAUUELPNQLBWEMEW2GKOHL4JWDSSCB2YOEFOBBNA8")).toBe(false);
+    expect(
+      isValidStellarPublicKey("GAT6KAYEL7B2MCVPAUUELPNQLBWEMEW2GKOHL4JWDSSCB2YOEFOBBNA8"),
+    ).toBe(false);
   });
 
   it("validates Soroban C... contract IDs", () => {
     expect(isValidContractId("")).toBe(false);
-    expect(isValidContractId("CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC")).toBe(true);
+    expect(isValidContractId("CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC")).toBe(
+      true,
+    );
     // Invalid prefix
-    expect(isValidContractId("GDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC")).toBe(false);
+    expect(isValidContractId("GDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC")).toBe(
+      false,
+    );
     // Invalid length
     expect(isValidContractId("CDLZFC3S")).toBe(false);
   });

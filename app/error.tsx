@@ -20,9 +20,7 @@ export default function ErrorBoundary({
     <div className="container mx-auto max-w-xl px-4 py-16">
       <Card className="border-red-200 dark:border-red-950">
         <CardHeader>
-          <CardTitle className="text-red-600 dark:text-red-400">
-            Something went wrong
-          </CardTitle>
+          <CardTitle className="text-red-600 dark:text-red-400">Something went wrong</CardTitle>
           <CardDescription>
             An unexpected error occurred while processing the request.
           </CardDescription>
