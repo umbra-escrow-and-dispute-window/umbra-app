@@ -163,3 +163,84 @@ export function getStateBadgeVariant(
       return "outline";
   }
 }
+
+/**
+ * Compute countdown structure given a target timestamp and current timestamp.
+ */
+export function getTimeRemaining(
+  targetTime: bigint | number | undefined,
+  nowTime: bigint | number,
+): { expired: boolean; secondsRemaining: bigint; formatted: string } {
+  if (!targetTime || targetTime <= 0n) {
+    return { expired: true, secondsRemaining: 0n, formatted: "Expired" };
+  }
+  const target = typeof targetTime === "bigint" ? targetTime : BigInt(targetTime);
+  const now = typeof nowTime === "bigint" ? nowTime : BigInt(nowTime);
+
+  if (now >= target) {
+    return { expired: true, secondsRemaining: 0n, formatted: "Expired" };
+  }
+
+  const diff = target - now;
+  return {
+    expired: false,
+    secondsRemaining: diff,
+    formatted: formatDuration(diff),
+  };
+}
+
+/**
+ * Format basis points into human-readable percentage (e.g. 5000 -> '50.00%').
+ */
+export function formatBps(bps: number | undefined): string {
+  if (bps === undefined || bps === null) return "0.00%";
+  const pct = (bps / 100).toFixed(2);
+  return `${pct}%`;
+}
+
+/**
+ * Readable description of arbiter configuration.
+ */
+export function formatArbiterInfo(arbiter: {
+  type: string;
+  address?: string;
+  members?: string[];
+  threshold?: number;
+  signerKey?: string;
+}): string {
+  if (!arbiter) return "None";
+  switch (arbiter.type) {
+    case "None":
+      return "No Arbiter";
+    case "Single":
+      return arbiter.address
+        ? `Single Arbiter (${truncateAddress(arbiter.address)})`
+        : "Single Arbiter";
+    case "Panel":
+      return `Panel (${arbiter.threshold || 0}/${arbiter.members?.length || 0})`;
+    case "Signed":
+      return "Signed Authorization";
+    default:
+      return arbiter.type;
+  }
+}
+
+/**
+ * Format verdict resolution into readable string.
+ */
+export function formatVerdict(verdict: {
+  type: "RefundBuyer" | "ReleaseSeller" | "Split";
+  buyerBps?: number;
+}): string {
+  if (!verdict) return "None";
+  switch (verdict.type) {
+    case "RefundBuyer":
+      return "Full Refund to Buyer";
+    case "ReleaseSeller":
+      return "Full Release to Seller";
+    case "Split":
+      return `Split (${formatBps(verdict.buyerBps)} Buyer / ${formatBps(10000 - (verdict.buyerBps || 0))} Seller)`;
+    default:
+      return verdict.type;
+  }
+}
