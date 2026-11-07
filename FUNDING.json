@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/drips-network/funding-json/main/schema.json",
+  "version": "1.0.0",
+  "name": "umbra-app",
+  "description": "Web explorer, participant console, and arbiter resolution interface for Umbra Escrow & Dispute Window Protocol on Stellar",
+  "drips": {
+    "network": "stellar",
+    "address": "GBBD67VFO7CTP3S5BX7A5UOHQLWJ2C3Z7G4V5N3A2B1C0D9E8F7A6B5C",
+    "splits": [
+      {
+        "name": "Umbra Protocol Core Contracts",
+        "weight": 50,
+        "repo": "https://github.com/umbra-escrow-and-dispute-window/umbra-contracts"
+      },
+      {
+        "name": "Umbra TypeScript SDK",
+        "weight": 25,
+        "repo": "https://github.com/umbra-escrow-and-dispute-window/umbra-sdk"
+      },
+      {
+        "name": "Umbra App & Explorer",
+        "weight": 25,
+        "repo": "https://github.com/umbra-escrow-and-dispute-window/umbra-app"
+      }
+    ]
+  }
+}
