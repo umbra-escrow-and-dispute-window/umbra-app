@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
+import React from "react";
 import { badgeVariants } from "../components/ui/badge";
 import { buttonVariants } from "../components/ui/button";
+import { Input } from "../components/ui/input";
 
 describe("UI Primitives Variant Classes", () => {
   it("renders all button variants correctly", () => {
@@ -38,5 +40,10 @@ describe("UI Primitives Variant Classes", () => {
     const custom = badgeVariants({ variant: "success", className: "extra-badge" });
     expect(custom).toContain("extra-badge");
     expect(custom).toContain("bg-emerald-600");
+  });
+
+  it("exports Input component with correct displayName", () => {
+    expect(Input.displayName).toBe("Input");
+    expect(typeof Input).toBe("object");
   });
 });
