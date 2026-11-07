@@ -9,6 +9,10 @@ import {
   isTerminalState,
   canDispute,
   canClaimTimeout,
+  getTimeRemaining,
+  formatBps,
+  formatArbiterInfo,
+  formatVerdict,
 } from "../lib/format";
 import { EscrowRecord } from "../lib/types";
 
@@ -141,5 +145,48 @@ describe("State Machine Timeout & Dispute Rules", () => {
     // At and after confirm window
     expect(canClaimTimeout(baseEscrow, 186_400n)).toBe(true);
     expect(canClaimTimeout(baseEscrow, 200_000n)).toBe(true);
+  });
+
+  it("calculates countdown time remaining accurately", () => {
+    expect(getTimeRemaining(undefined, 1000n).expired).toBe(true);
+    expect(getTimeRemaining(1000n, 1000n).expired).toBe(true);
+    expect(getTimeRemaining(1000n, 1200n).expired).toBe(true);
+
+    const active = getTimeRemaining(2000n, 1000n);
+    expect(active.expired).toBe(false);
+    expect(active.secondsRemaining).toBe(1000n);
+    expect(active.formatted).toContain("16m");
+  });
+
+  it("formats basis points percentage strings", () => {
+    expect(formatBps(undefined)).toBe("0.00%");
+    expect(formatBps(0)).toBe("0.00%");
+    expect(formatBps(5000)).toBe("50.00%");
+    expect(formatBps(10000)).toBe("100.00%");
+    expect(formatBps(250)).toBe("2.50%");
+  });
+
+  it("formats arbiter configurations", () => {
+    expect(formatArbiterInfo({ type: "None" })).toBe("No Arbiter");
+    expect(
+      formatArbiterInfo({
+        type: "Single",
+        address: "GBBD67VFO7CTP3S5BGBBD67VFO7CTP3S5BGBBD67VFO7CTP3S5B",
+      }),
+    ).toContain("Single Arbiter (GBBD6...3S5B)");
+    expect(
+      formatArbiterInfo({
+        type: "Panel",
+        threshold: 2,
+        members: ["M1", "M2", "M3"],
+      }),
+    ).toBe("Panel (2/3)");
+    expect(formatArbiterInfo({ type: "Signed" })).toBe("Signed Authorization");
+  });
+
+  it("formats dispute verdicts clearly", () => {
+    expect(formatVerdict({ type: "RefundBuyer" })).toBe("Full Refund to Buyer");
+    expect(formatVerdict({ type: "ReleaseSeller" })).toBe("Full Release to Seller");
+    expect(formatVerdict({ type: "Split", buyerBps: 6000 })).toBe("Split (60.00% Buyer / 40.00% Seller)");
   });
 });
