@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getEscrowContractId } from "@/lib/umbra";
 import { truncateAddress } from "@/lib/format";
+import { SEED_ESCROWS } from "@/lib/mock-data";
+import { EscrowExplorer } from "@/components/escrow-explorer";
 
 export default function HomePage() {
   const contractId = getEscrowContractId();
@@ -20,6 +22,9 @@ export default function HomePage() {
           arbiters within normative time windows.
         </p>
       </div>
+
+      {/* Explorer Directory */}
+      <EscrowExplorer initialEscrows={SEED_ESCROWS} />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
