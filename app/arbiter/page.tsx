@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { AdjudicatorTool } from "@/components/adjudicator-tool";
 import {
   formatStroops,
   truncateAddress,
@@ -301,6 +302,13 @@ export default function ArbiterPage() {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Adjudicator Payload Tool */}
+              <AdjudicatorTool
+                escrowId={selectedEscrow.id}
+                verdictType={verdictType}
+                buyerBps={buyerBps}
+              />
 
               {/* Verdict Submission Form */}
               <Card>
