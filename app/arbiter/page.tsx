@@ -5,14 +5,18 @@ import Link from "next/link";
 import { clientStore } from "@/lib/client-umbra";
 import { EscrowRecord, VerdictResolution } from "@/lib/types";
 import { WalletConnect, WalletState } from "@/components/wallet-connect";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   formatStroops,
   truncateAddress,
-  truncateHash,
-  formatTimestamp,
   formatBps,
 } from "@/lib/format";
 
@@ -23,14 +27,19 @@ export default function ArbiterPage() {
     role: "Arbiter",
   });
 
-  const [escrows, setEscrows] = useState<EscrowRecord[]>(() => clientStore.listEscrows());
-  const [selectedEscrow, setSelectedEscrow] = useState<EscrowRecord | null>(null);
+  const [escrows, setEscrows] = useState<EscrowRecord[]>(() =>
+    clientStore.listEscrows(),
+  );
+  const [selectedEscrow, setSelectedEscrow] = useState<EscrowRecord | null>(
+    null,
+  );
 
   // Verdict state
-  const [verdictType, setVerdictType] = useState<"RefundBuyer" | "ReleaseSeller" | "Split">(
-    "Split",
-  );
+  const [verdictType, setVerdictType] = useState<
+    "RefundBuyer" | "ReleaseSeller" | "Split"
+  >("Split");
   const [buyerBps, setBuyerBps] = useState(5000); // 50%
+  const [signedSigInput, setSignedSigInput] = useState("");
 
   const refreshList = () => {
     const list = clientStore.listEscrows();
@@ -42,12 +51,19 @@ export default function ArbiterPage() {
   };
 
   const disputedEscrows = useMemo(() => {
-    return escrows.filter(
-      (e) =>
-        e.state === "Disputed" &&
-        (e.arbiter.address?.toLowerCase() === wallet.address.toLowerCase() ||
-          wallet.role === "Arbiter"),
-    );
+    return escrows.filter((e) => {
+      if (e.state !== "Disputed") return false;
+      if (wallet.role === "Arbiter") return true;
+      if (e.arbiter.type === "Single") {
+        return e.arbiter.address?.toLowerCase() === wallet.address.toLowerCase();
+      }
+      if (e.arbiter.type === "Panel") {
+        return e.arbiter.members?.some(
+          (m) => m.toLowerCase() === wallet.address.toLowerCase(),
+        );
+      }
+      return true;
+    });
   }, [escrows, wallet.address, wallet.role]);
 
   const handleIssueVerdict = (e: React.FormEvent) => {
@@ -60,8 +76,13 @@ export default function ArbiterPage() {
         buyerBps: verdictType === "Split" ? buyerBps : undefined,
       };
 
-      clientStore.resolveDispute(selectedEscrow.id, verdict);
-      alert(`Verdict issued successfully for Escrow #${selectedEscrow.id}!`);
+      if (selectedEscrow.arbiter.type === "Panel") {
+        clientStore.signPanelVerdict(selectedEscrow.id, wallet.address, verdict);
+        alert(`Panel signature recorded for Escrow #${selectedEscrow.id}!`);
+      } else {
+        clientStore.resolveDispute(selectedEscrow.id, verdict);
+        alert(`Verdict issued successfully for Escrow #${selectedEscrow.id}!`);
+      }
       refreshList();
     } catch (err: any) {
       alert(err?.message || "Failed to resolve dispute");
@@ -73,10 +94,12 @@ export default function ArbiterPage() {
       {/* Top Banner and Account Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Arbiter Resolution Console</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Arbiter Resolution Console
+          </h1>
           <p className="text-neutral-600 dark:text-neutral-400 mt-1">
             Review contested deliveries, inspect off-chain evidence hashes, and execute binding
-            verdicts.
+            single, panel, and signed verdicts.
           </p>
         </div>
 
@@ -95,7 +118,9 @@ export default function ArbiterPage() {
           <CardContent className="space-y-3">
             {disputedEscrows.length === 0 ? (
               <div className="py-8 text-center">
-                <p className="text-xs text-neutral-500">No active disputes awaiting your review.</p>
+                <p className="text-xs text-neutral-500">
+                  No active disputes awaiting your review.
+                </p>
               </div>
             ) : (
               disputedEscrows.map((escrow) => (
@@ -111,7 +136,7 @@ export default function ArbiterPage() {
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-mono font-semibold text-xs">#{escrow.id}</span>
                     <Badge variant="destructive" className="text-[10px] py-0">
-                      Disputed
+                      Disputed ({escrow.arbiter.type})
                     </Badge>
                   </div>
                   <p className="text-sm font-bold text-neutral-900 dark:text-neutral-100">
@@ -140,7 +165,10 @@ export default function ArbiterPage() {
                         Evidence Review: Escrow #{selectedEscrow.id}
                       </CardTitle>
                       <CardDescription>
-                        Total Amount: {formatStroops(selectedEscrow.amount)} XLM
+                        Principal: {formatStroops(selectedEscrow.amount)} XLM
+                        {selectedEscrow.disputeBond && selectedEscrow.disputeBond > 0n
+                          ? ` | Dispute Bond: ${formatStroops(selectedEscrow.disputeBond)} XLM`
+                          : ""}
                       </CardDescription>
                     </div>
                     <Link
@@ -162,6 +190,60 @@ export default function ArbiterPage() {
                       <p className="font-semibold break-all mt-0.5">{selectedEscrow.seller}</p>
                     </div>
                   </div>
+
+                  {/* Panel Arbitration Tracker */}
+                  {selectedEscrow.arbiter.type === "Panel" && (
+                    <div className="p-3 rounded-lg border border-purple-200 dark:border-purple-800 bg-purple-50/30 dark:bg-purple-950/20 font-sans">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-semibold text-purple-900 dark:text-purple-300">
+                          Panel Arbitration ({selectedEscrow.arbiter.threshold ?? 2} of{" "}
+                          {selectedEscrow.arbiter.members?.length ?? 3} Required)
+                        </span>
+                        <Badge variant="outline" className="text-purple-700 dark:text-purple-300">
+                          {selectedEscrow.arbiter.signatures?.length ?? 0} Signed
+                        </Badge>
+                      </div>
+                      <div className="space-y-1 font-mono text-[11px]">
+                        {selectedEscrow.arbiter.members?.map((m) => {
+                          const isSigned =
+                            selectedEscrow.arbiter.signatures?.includes(m);
+                          return (
+                            <div
+                              key={m}
+                              className="flex items-center justify-between py-1 border-b border-purple-100 dark:border-purple-900 last:border-0"
+                            >
+                              <span>{truncateAddress(m, 8)}</span>
+                              <Badge
+                                variant={isSigned ? "default" : "secondary"}
+                                className="text-[10px]"
+                              >
+                                {isSigned ? "Signed" : "Pending"}
+                              </Badge>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Signed Adjudicator Payload Preview */}
+                  {selectedEscrow.arbiter.type === "Signed" && (
+                    <div className="p-3 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50/30 dark:bg-amber-950/20 font-sans">
+                      <span className="font-semibold text-amber-900 dark:text-amber-300 block mb-1">
+                        Cryptographic Signed Adjudicator
+                      </span>
+                      <p className="text-[11px] text-amber-700 dark:text-amber-400 mb-2 font-mono">
+                        Domain: umbra:adjudicate:v1 | Escrow: #{selectedEscrow.id}
+                      </p>
+                      <input
+                        type="text"
+                        placeholder="Paste 64-byte Ed25519 hex signature..."
+                        value={signedSigInput}
+                        onChange={(e) => setSignedSigInput(e.target.value)}
+                        className="w-full text-xs font-mono p-2 rounded border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-800"
+                      />
+                    </div>
+                  )}
 
                   <div className="space-y-3">
                     <div className="p-3 rounded bg-neutral-100 dark:bg-neutral-900">
@@ -223,9 +305,13 @@ export default function ArbiterPage() {
               {/* Verdict Submission Form */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-base font-semibold">Issue Binding Verdict</CardTitle>
+                  <CardTitle className="text-base font-semibold">
+                    {selectedEscrow.arbiter.type === "Panel"
+                      ? "Submit Panel Signature"
+                      : "Issue Binding Verdict"}
+                  </CardTitle>
                   <CardDescription>
-                    Executes contract settlement transaction to disburse held funds.
+                    Executes contract settlement transaction to disburse held funds and dispute bond.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -290,7 +376,9 @@ export default function ArbiterPage() {
                     )}
 
                     <Button type="submit" className="w-full">
-                      Execute Verdict
+                      {selectedEscrow.arbiter.type === "Panel"
+                        ? "Sign Panel Verdict"
+                        : "Execute Verdict"}
                     </Button>
                   </form>
                 </CardContent>
