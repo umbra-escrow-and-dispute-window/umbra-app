@@ -41,6 +41,7 @@ export default function ConsolePage() {
     "GAKF4W2N3M5L6K7J8H9G0F1E2D3C4B5A6B7C8D9E0F1A2B3C4D5E6F7A",
   );
   const [newAmountXlm, setNewAmountXlm] = useState("50");
+  const [newDisputeBondXlm, setNewDisputeBondXlm] = useState("5");
   const [newTermsText, setNewTermsText] = useState(
     "Full-stack Soroban escrow integration delivery",
   );
@@ -67,6 +68,9 @@ export default function ConsolePage() {
     e.preventDefault();
     try {
       const stroops = parseStroops(newAmountXlm);
+      const disputeBondStroops = newDisputeBondXlm
+        ? parseStroops(newDisputeBondXlm)
+        : 0n;
       const termsHash = hashTermsDocument({
         terms: newTermsText.trim(),
         createdAt: Date.now(),
@@ -86,6 +90,7 @@ export default function ConsolePage() {
           address: "GARB4W2N3M5L6K7J8H9G0F1E2D3C4B5A6B7C8D9E0F1A2B3C4D5E6F7A",
         },
         termsHash,
+        disputeBond: disputeBondStroops,
       });
 
       setShowCreateModal(false);
@@ -324,6 +329,22 @@ export default function ConsolePage() {
                   onChange={(e) => setNewAmountXlm(e.target.value)}
                   required
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-neutral-500 mb-1">
+                  Dispute Bond (XLM, Anti-Griefing)
+                </label>
+                <Input
+                  type="number"
+                  step="0.0000001"
+                  min="0"
+                  value={newDisputeBondXlm}
+                  onChange={(e) => setNewDisputeBondXlm(e.target.value)}
+                />
+                <p className="text-[10px] text-neutral-500 mt-1">
+                  Posted by buyer when filing dispute. Compensates seller on frivolous claims.
+                </p>
               </div>
 
               <div>
