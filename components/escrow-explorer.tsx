@@ -140,7 +140,21 @@ export function EscrowExplorer({ initialEscrows }: EscrowExplorerProps) {
                     >
                       <td className="py-3 px-2 font-mono font-medium">#{escrow.id}</td>
                       <td className="py-3 px-2">
-                        <Badge variant={getStateBadgeVariant(escrow.state)}>{escrow.state}</Badge>
+                        <div className="flex flex-col gap-1 items-start">
+                          <Badge variant={getStateBadgeVariant(escrow.state)}>{escrow.state}</Badge>
+                          {(escrow.astrolabeRecord ||
+                            [
+                              "Released",
+                              "Refunded",
+                              "ResolvedBuyer",
+                              "ResolvedSeller",
+                              "ResolvedSplit",
+                            ].includes(escrow.state)) && (
+                            <span className="inline-flex items-center text-[9px] font-semibold text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 px-1 rounded">
+                              Astrolabe
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="py-3 px-2 font-semibold">{formatStroops(escrow.amount)}</td>
                       <td className="py-3 px-2 font-mono text-xs text-neutral-500">

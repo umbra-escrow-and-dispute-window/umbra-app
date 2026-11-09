@@ -227,6 +227,39 @@ export default async function EscrowDetailPage({ params }: EscrowDetailPageProps
         </Card>
       </div>
 
+      {/* Astrolabe Reputation Record */}
+      {isTerminal && (
+        <Card className="border-purple-200 dark:border-purple-900 bg-purple-50/20 dark:bg-purple-950/10">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-semibold flex items-center gap-2">
+                <span>Astrolabe On-Chain Attestation</span>
+                <Badge variant="outline" className="text-purple-600 dark:text-purple-300">
+                  Topic: [astrolabe, record, #{escrow.id}]
+                </Badge>
+              </CardTitle>
+            </div>
+            <CardDescription>
+              Permanent machine-verifiable reputation record emitted on terminal settlement.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-mono">
+            <div className="p-3 rounded bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+              <span className="font-sans text-neutral-500 uppercase">Outcome State</span>
+              <p className="font-semibold text-sm mt-1">{escrow.state}</p>
+            </div>
+            <div className="p-3 rounded bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+              <span className="font-sans text-neutral-500 uppercase">Volume Tier</span>
+              <p className="font-semibold text-sm mt-1">Tier Bucket #2 (&le; 1,000 XLM)</p>
+            </div>
+            <div className="p-3 rounded bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+              <span className="font-sans text-neutral-500 uppercase">Storage Lease TTL</span>
+              <p className="font-semibold text-sm mt-1">{escrow.ttlLedgers?.toLocaleString() ?? "518,400"} Ledgers</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Off-Chain Document Hashes */}
       <Card>
         <CardHeader>
