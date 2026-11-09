@@ -11,7 +11,8 @@ This guide is designed for grant reviewers evaluating the **Umbra Escrow & Dispu
 - **Public Explorer:** Browse on-chain escrows, live status filters (`All`, `Funded`, `Delivered`, `Disputed`, `Released`, `Resolved`, `Refunded`), and search.
 - **Escrow Detail:** Navigate to any escrow (`/escrows/1`) to inspect full 4-step lifecycle stepper, counterparty keys, and countdown timers.
 - **Participant Console:** Connect test personas (`Buyer` / `Seller`), create new escrows with automated terms hashing, submit delivery proofs, release funds, or file disputes.
-- **Arbiter Console:** Review evidence hashes for contested escrows and execute binding settlement verdicts (`RefundBuyer`, `ReleaseSeller`, or custom basis-point `Split`).
+- **Arbiter Console:** Review evidence hashes for contested escrows and execute binding settlement verdicts (`RefundBuyer`, `ReleaseSeller`, or custom basis-point `Split`), with full support for M-of-N Panel arbitration and off-chain Signed adjudicators.
+- **Collateral Vault:** Dedicated seller vault dashboard (`/vault`) for staking reserves, managing instant-release liabilities, and monitoring lock expirations.
 - **Off-Chain Verifier:** Independently verify RFC 8785 canonical JSON against on-chain SHA-256 hashes (`/verify`).
 
 ### 2. Is the code clean?
