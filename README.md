@@ -14,8 +14,10 @@ Umbra provides trust-minimized, machine-to-machine conditional payments on Stell
 
 - **Public Escrow Explorer:** Search, inspect, and filter on-chain escrows by ID, state (`Funded`, `Delivered`, `Disputed`, `Released`, `Resolved`, `Refunded`), buyer, seller, or asset.
 - **Escrow Detail & Stepper:** Visualizes the 4-step escrow lifecycle, countdown timers for confirm and dispute windows, and links to off-chain hashes.
-- **Participant Console:** Streamlined buyer and seller actions—create escrows with automated terms hashing, submit delivery proofs, release payments, or file disputes.
-- **Arbiter Resolution Console:** Adjudication queue for single arbiters to review evidence hashes (terms, delivery notes, dispute claims) and issue binding settlements (`RefundBuyer`, `ReleaseSeller`, or basis-point `Split`).
+- **Participant Console:** Streamlined buyer and seller actions—create escrows with automated terms hashing, submit delivery proofs, release payments, configure anti-griefing dispute bonds, or file disputes.
+- **Arbiter Resolution Console:** Adjudication queue supporting single arbiters, multi-signature threshold panel voting, and off-chain signed Ed25519 adjudicator verdicts.
+- **Seller Collateral Vault (`/vault`):** Staking management interface for sellers to deposit collateral, withdraw unencumbered funds, and monitor active instant-release liabilities.
+- **Astrolabe Reputation Attestations:** Visual badges indicating on-chain reputation attestations and logarithmic volume tiers for settled escrows.
 - **Off-Chain Document Verifier:** Independent cryptographic verifier conforming to RFC 8785 canonical JSON and domain-separated SHA-256 hashing.
 - **Interactive Sandbox & Personas:** Pre-configured testnet roles (Buyer, Seller, Arbiter) or custom Stellar public keys to evaluate and operate the app without requiring extension wallets.
 

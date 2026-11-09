@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.2.0] - 2026-11-09
+
+### Added
+
+- **Multi-Signer Panel Arbitration Console:** Arbiter console support for M-of-N threshold arbitration (`ArbiterType = Panel`), with member signature tracking, live threshold progress badges, and multi-signer verdict execution.
+- **Cryptographic Signed Adjudicator Tooling:** Canonical 32-byte payload viewer (`umbra:adjudicate:v1`) and Ed25519 signature input support in the arbiter workspace.
+- **Anti-Griefing Dispute Bonds:** Escrow creation form support for optional `disputeBond` configuration and payout calculations.
+- **Astrolabe Reputation Attestations:** Display on-chain Astrolabe attestation badges (`["astrolabe", "record", escrow_id]`) and logarithmic volume tiers on terminal escrows.
+- **Contract Storage TTL Extension:** Interactive lease status viewer and +30 days (+518,400 ledgers) renewal trigger on escrow detail pages.
+- **Seller Collateral Vault Dashboard (`/vault`):** Staking management interface for sellers to deposit collateral, withdraw unencumbered funds, and monitor active instant-release liabilities.
+
+---
+
 ## [0.1.0] - 2026-11-07
 
 ### Added
