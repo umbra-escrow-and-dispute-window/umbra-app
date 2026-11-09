@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { TtlExtensionButton } from "@/components/ttl-extension-button";
 import { clientStore } from "@/lib/client-umbra";
 import {
   formatStroops,
@@ -68,6 +69,9 @@ export default async function EscrowDetailPage({ params }: EscrowDetailPageProps
           <div className="flex items-center gap-3">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Escrow #{escrow.id}</h1>
             <Badge variant={getStateBadgeVariant(escrow.state)}>{escrow.state}</Badge>
+          </div>
+          <div className="mt-2">
+            <TtlExtensionButton escrowId={escrow.id} initialLedgers={escrow.ttlLedgers} />
           </div>
         </div>
 
