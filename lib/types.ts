@@ -23,6 +23,8 @@ export interface ArbiterInfo {
   members?: string[];
   threshold?: number;
   signerKey?: string;
+  signatures?: string[];
+  signedSignature?: string;
 }
 
 /**
@@ -43,6 +45,30 @@ export interface EscrowRecord {
   termsHash: string;
   proofHash?: string;
   reasonHash?: string;
+  disputeBond?: bigint;
+  ttlLedgers?: number;
+  astrolabeRecord?: {
+    amountBucket: number;
+    attestedAt: number;
+  };
+}
+
+/**
+ * Seller Collateral Vault data structures.
+ */
+export interface VaultLockItem {
+  escrowId: string;
+  amount: bigint;
+  expiresAt: number;
+}
+
+export interface VaultSellerPosition {
+  seller: string;
+  asset: string;
+  totalCollateral: bigint;
+  lockedCollateral: bigint;
+  availableCollateral: bigint;
+  locks: VaultLockItem[];
 }
 
 /**
