@@ -26,6 +26,9 @@ export function Navbar() {
             <Link href="/arbiter" className="text-neutral-300 transition-colors hover:text-white">
               Arbiter
             </Link>
+            <Link href="/vault" className="text-neutral-300 transition-colors hover:text-white">
+              Vault
+            </Link>
             <Link href="/verify" className="text-neutral-300 transition-colors hover:text-white">
               Verifier
             </Link>
