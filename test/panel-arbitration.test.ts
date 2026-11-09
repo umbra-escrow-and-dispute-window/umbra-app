@@ -51,14 +51,14 @@ describe("Panel arbitration aggregation and threshold validation", () => {
 
   it("rejects duplicate signatures from the same member", () => {
     store.signPanelVerdict("500", memberA, { type: "ReleaseSeller" });
-    expect(() =>
-      store.signPanelVerdict("500", memberA, { type: "ReleaseSeller" }),
-    ).toThrow("Member has already signed this verdict");
+    expect(() => store.signPanelVerdict("500", memberA, { type: "ReleaseSeller" })).toThrow(
+      "Member has already signed this verdict",
+    );
   });
 
   it("rejects sign-offs from unauthorized addresses not in the panel", () => {
-    expect(() =>
-      store.signPanelVerdict("500", "G_INTRUDER", { type: "ReleaseSeller" }),
-    ).toThrow("Address is not a member of the arbitration panel");
+    expect(() => store.signPanelVerdict("500", "G_INTRUDER", { type: "ReleaseSeller" })).toThrow(
+      "Address is not a member of the arbitration panel",
+    );
   });
 });

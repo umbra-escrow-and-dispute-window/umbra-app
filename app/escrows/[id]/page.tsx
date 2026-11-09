@@ -258,7 +258,9 @@ export default async function EscrowDetailPage({ params }: EscrowDetailPageProps
             </div>
             <div className="p-3 rounded bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
               <span className="font-sans text-neutral-500 uppercase">Storage Lease TTL</span>
-              <p className="font-semibold text-sm mt-1">{escrow.ttlLedgers?.toLocaleString() ?? "518,400"} Ledgers</p>
+              <p className="font-semibold text-sm mt-1">
+                {escrow.ttlLedgers?.toLocaleString() ?? "518,400"} Ledgers
+              </p>
             </div>
           </CardContent>
         </Card>

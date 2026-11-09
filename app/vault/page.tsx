@@ -5,13 +5,7 @@ import Link from "next/link";
 import { clientStore } from "@/lib/client-umbra";
 import { VaultSellerPosition } from "@/lib/types";
 import { WalletConnect, WalletState } from "@/components/wallet-connect";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -77,9 +71,7 @@ export default function VaultPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Seller Collateral Vault
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">Seller Collateral Vault</h1>
           <p className="text-neutral-600 dark:text-neutral-400 mt-1">
             Stake reserves to back instant-release escrows with time-bounded post-release reversal
             protection.
@@ -139,9 +131,7 @@ export default function VaultPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-neutral-500">
-              Unencumbered balance free of active claims
-            </p>
+            <p className="text-xs text-neutral-500">Unencumbered balance free of active claims</p>
           </CardContent>
         </Card>
       </div>
@@ -152,7 +142,8 @@ export default function VaultPage() {
           <CardHeader>
             <CardTitle className="text-base font-semibold">Deposit Collateral</CardTitle>
             <CardDescription>
-              Increase unencumbered vault balance to accept higher-volume instant-release agreements.
+              Increase unencumbered vault balance to accept higher-volume instant-release
+              agreements.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -181,7 +172,8 @@ export default function VaultPage() {
           <CardHeader>
             <CardTitle className="text-base font-semibold">Withdraw Unencumbered Balance</CardTitle>
             <CardDescription>
-              Withdraw available funds back to your seller wallet. Cannot withdraw locked liabilities.
+              Withdraw available funds back to your seller wallet. Cannot withdraw locked
+              liabilities.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -242,7 +234,10 @@ export default function VaultPage() {
                 </thead>
                 <tbody className="divide-y divide-neutral-100 dark:divide-neutral-800">
                   {position.locks.map((lock) => (
-                    <tr key={lock.escrowId} className="hover:bg-neutral-50/50 dark:hover:bg-neutral-900/50">
+                    <tr
+                      key={lock.escrowId}
+                      className="hover:bg-neutral-50/50 dark:hover:bg-neutral-900/50"
+                    >
                       <td className="py-3 px-3 font-mono">
                         <Link
                           href={`/escrows/${lock.escrowId}`}

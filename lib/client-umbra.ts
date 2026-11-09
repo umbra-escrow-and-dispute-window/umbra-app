@@ -1,9 +1,4 @@
-import {
-  EscrowRecord,
-  EscrowState,
-  VerdictResolution,
-  VaultSellerPosition,
-} from "./types";
+import { EscrowRecord, EscrowState, VerdictResolution, VaultSellerPosition } from "./types";
 import { SEED_ESCROWS } from "./mock-data";
 import { canDispute, canClaimTimeout } from "./format";
 
@@ -320,11 +315,7 @@ class UmbraClientStore {
     return { ...pos };
   }
 
-  public depositVault(
-    seller: string,
-    asset: string,
-    amount: bigint,
-  ): VaultSellerPosition {
+  public depositVault(seller: string, asset: string, amount: bigint): VaultSellerPosition {
     const pos = this.getVaultPosition(seller, asset);
     pos.totalCollateral += amount;
     pos.availableCollateral += amount;
@@ -332,11 +323,7 @@ class UmbraClientStore {
     return { ...pos };
   }
 
-  public withdrawVault(
-    seller: string,
-    asset: string,
-    amount: bigint,
-  ): VaultSellerPosition {
+  public withdrawVault(seller: string, asset: string, amount: bigint): VaultSellerPosition {
     const pos = this.getVaultPosition(seller, asset);
     if (amount > pos.availableCollateral) {
       throw new Error("Insufficient available unencumbered collateral");

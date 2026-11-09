@@ -20,8 +20,11 @@ export function AdjudicatorTool({
   const payloadHex = useMemo(() => {
     // 19 bytes domain + 8 bytes id + 1 byte tag + 4 bytes bps
     const domainHex = Buffer.from("umbra:adjudicate:v1", "utf8").toString("hex");
-    const idHex = BigInt(escrowId || 0).toString(16).padStart(16, "0");
-    const tagHex = verdictType === "RefundBuyer" ? "00" : verdictType === "ReleaseSeller" ? "01" : "02";
+    const idHex = BigInt(escrowId || 0)
+      .toString(16)
+      .padStart(16, "0");
+    const tagHex =
+      verdictType === "RefundBuyer" ? "00" : verdictType === "ReleaseSeller" ? "01" : "02";
     const bpsHex = (verdictType === "Split" ? buyerBps : 0).toString(16).padStart(8, "0");
     return `${domainHex}${idHex}${tagHex}${bpsHex}`;
   }, [escrowId, verdictType, buyerBps]);
@@ -47,7 +50,8 @@ export function AdjudicatorTool({
           </Button>
         </div>
         <CardDescription className="text-xs">
-          Canonical binary format: <code className="font-mono">domain || id || tag || buyer_bps</code>
+          Canonical binary format:{" "}
+          <code className="font-mono">domain || id || tag || buyer_bps</code>
         </CardDescription>
       </CardHeader>
       <CardContent>

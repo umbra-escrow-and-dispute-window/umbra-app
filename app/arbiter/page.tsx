@@ -5,21 +5,11 @@ import Link from "next/link";
 import { clientStore } from "@/lib/client-umbra";
 import { EscrowRecord, VerdictResolution } from "@/lib/types";
 import { WalletConnect, WalletState } from "@/components/wallet-connect";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { AdjudicatorTool } from "@/components/adjudicator-tool";
-import {
-  formatStroops,
-  truncateAddress,
-  formatBps,
-} from "@/lib/format";
+import { formatStroops, truncateAddress, formatBps } from "@/lib/format";
 
 export default function ArbiterPage() {
   const [wallet, setWallet] = useState<WalletState>({
@@ -28,17 +18,13 @@ export default function ArbiterPage() {
     role: "Arbiter",
   });
 
-  const [escrows, setEscrows] = useState<EscrowRecord[]>(() =>
-    clientStore.listEscrows(),
-  );
-  const [selectedEscrow, setSelectedEscrow] = useState<EscrowRecord | null>(
-    null,
-  );
+  const [escrows, setEscrows] = useState<EscrowRecord[]>(() => clientStore.listEscrows());
+  const [selectedEscrow, setSelectedEscrow] = useState<EscrowRecord | null>(null);
 
   // Verdict state
-  const [verdictType, setVerdictType] = useState<
-    "RefundBuyer" | "ReleaseSeller" | "Split"
-  >("Split");
+  const [verdictType, setVerdictType] = useState<"RefundBuyer" | "ReleaseSeller" | "Split">(
+    "Split",
+  );
   const [buyerBps, setBuyerBps] = useState(5000); // 50%
   const [signedSigInput, setSignedSigInput] = useState("");
 
@@ -59,9 +45,7 @@ export default function ArbiterPage() {
         return e.arbiter.address?.toLowerCase() === wallet.address.toLowerCase();
       }
       if (e.arbiter.type === "Panel") {
-        return e.arbiter.members?.some(
-          (m) => m.toLowerCase() === wallet.address.toLowerCase(),
-        );
+        return e.arbiter.members?.some((m) => m.toLowerCase() === wallet.address.toLowerCase());
       }
       return true;
     });
@@ -95,9 +79,7 @@ export default function ArbiterPage() {
       {/* Top Banner and Account Switcher */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Arbiter Resolution Console
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">Arbiter Resolution Console</h1>
           <p className="text-neutral-600 dark:text-neutral-400 mt-1">
             Review contested deliveries, inspect off-chain evidence hashes, and execute binding
             single, panel, and signed verdicts.
@@ -119,9 +101,7 @@ export default function ArbiterPage() {
           <CardContent className="space-y-3">
             {disputedEscrows.length === 0 ? (
               <div className="py-8 text-center">
-                <p className="text-xs text-neutral-500">
-                  No active disputes awaiting your review.
-                </p>
+                <p className="text-xs text-neutral-500">No active disputes awaiting your review.</p>
               </div>
             ) : (
               disputedEscrows.map((escrow) => (
@@ -206,8 +186,7 @@ export default function ArbiterPage() {
                       </div>
                       <div className="space-y-1 font-mono text-[11px]">
                         {selectedEscrow.arbiter.members?.map((m) => {
-                          const isSigned =
-                            selectedEscrow.arbiter.signatures?.includes(m);
+                          const isSigned = selectedEscrow.arbiter.signatures?.includes(m);
                           return (
                             <div
                               key={m}
@@ -319,7 +298,8 @@ export default function ArbiterPage() {
                       : "Issue Binding Verdict"}
                   </CardTitle>
                   <CardDescription>
-                    Executes contract settlement transaction to disburse held funds and dispute bond.
+                    Executes contract settlement transaction to disburse held funds and dispute
+                    bond.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>

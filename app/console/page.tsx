@@ -68,9 +68,7 @@ export default function ConsolePage() {
     e.preventDefault();
     try {
       const stroops = parseStroops(newAmountXlm);
-      const disputeBondStroops = newDisputeBondXlm
-        ? parseStroops(newDisputeBondXlm)
-        : 0n;
+      const disputeBondStroops = newDisputeBondXlm ? parseStroops(newDisputeBondXlm) : 0n;
       const termsHash = hashTermsDocument({
         terms: newTermsText.trim(),
         createdAt: Date.now(),

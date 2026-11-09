@@ -30,7 +30,11 @@ export function TtlExtensionButton({
   return (
     <div className="flex items-center gap-3">
       <span className="text-xs font-mono text-neutral-500">
-        Current Lease: <strong className="text-neutral-900 dark:text-neutral-100">{ledgers.toLocaleString()}</strong> Ledgers
+        Current Lease:{" "}
+        <strong className="text-neutral-900 dark:text-neutral-100">
+          {ledgers.toLocaleString()}
+        </strong>{" "}
+        Ledgers
       </span>
       <Button
         variant="outline"
