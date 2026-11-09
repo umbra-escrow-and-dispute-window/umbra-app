@@ -1,22 +1,43 @@
-import { EscrowRecord, EscrowState, VerdictResolution } from "./types";
+import {
+  EscrowRecord,
+  EscrowState,
+  VerdictResolution,
+  VaultSellerPosition,
+} from "./types";
 import { SEED_ESCROWS } from "./mock-data";
 import { canDispute, canClaimTimeout } from "./format";
+
+export function computeAmountBucket(amount: bigint): number {
+  if (amount <= 100_000_000n) return 0;
+  if (amount <= 1_000_000_000n) return 1;
+  if (amount <= 10_000_000_000n) return 2;
+  if (amount <= 100_000_000_000n) return 3;
+  return 4;
+}
 
 /**
  * In-memory client store for demo, development, and testing.
  */
 class UmbraClientStore {
   private escrows: EscrowRecord[] = [];
+  private vaultPositions: Map<string, VaultSellerPosition> = new Map();
 
   constructor(initialSeed: EscrowRecord[] = SEED_ESCROWS) {
-    this.escrows = initialSeed.map((e) => ({ ...e }));
+    this.escrows = initialSeed.map((e) => ({
+      ...e,
+      ttlLedgers: e.ttlLedgers ?? 120_000,
+    }));
   }
 
   /**
    * Reset store to default seed dataset.
    */
   public reset(seed: EscrowRecord[] = SEED_ESCROWS): void {
-    this.escrows = seed.map((e) => ({ ...e }));
+    this.escrows = seed.map((e) => ({
+      ...e,
+      ttlLedgers: e.ttlLedgers ?? 120_000,
+    }));
+    this.vaultPositions.clear();
   }
 
   /**
@@ -61,8 +82,14 @@ class UmbraClientStore {
     deliverBy: bigint;
     confirmWindow: bigint;
     disputeWindow: bigint;
-    arbiter: { type: "None" | "Single" | "Panel" | "Signed"; address?: string };
+    arbiter: {
+      type: "None" | "Single" | "Panel" | "Signed";
+      address?: string;
+      members?: string[];
+      threshold?: number;
+    };
     termsHash: string;
+    disputeBond?: bigint;
   }): EscrowRecord {
     const nextId = (this.escrows.length + 1).toString();
     const newRecord: EscrowRecord = {
@@ -75,8 +102,13 @@ class UmbraClientStore {
       confirmWindow: params.confirmWindow,
       disputeWindow: params.disputeWindow,
       state: "Funded",
-      arbiter: params.arbiter,
+      arbiter: {
+        ...params.arbiter,
+        signatures: [],
+      },
       termsHash: params.termsHash,
+      disputeBond: params.disputeBond ?? 0n,
+      ttlLedgers: 518_400,
     };
     this.escrows.unshift(newRecord);
     return { ...newRecord };
@@ -113,6 +145,10 @@ class UmbraClientStore {
     }
 
     record.state = "Released";
+    record.astrolabeRecord = {
+      amountBucket: computeAmountBucket(record.amount),
+      attestedAt: Date.now(),
+    };
     return { ...record };
   }
 
@@ -155,6 +191,10 @@ class UmbraClientStore {
     }
 
     record.state = "Released";
+    record.astrolabeRecord = {
+      amountBucket: computeAmountBucket(record.amount),
+      attestedAt: Date.now(),
+    };
     return { ...record };
   }
 
@@ -184,6 +224,55 @@ class UmbraClientStore {
     }
 
     record.state = nextState;
+    record.astrolabeRecord = {
+      amountBucket: computeAmountBucket(record.amount),
+      attestedAt: Date.now(),
+    };
+    return { ...record };
+  }
+
+  /**
+   * Panel member signs a verdict. If threshold signatures reached, resolves.
+   */
+  public signPanelVerdict(
+    id: string,
+    memberAddress: string,
+    verdict: VerdictResolution,
+  ): EscrowRecord {
+    const record = this.getEscrow(id);
+    if (!record) throw new Error(`Escrow #${id} not found`);
+    if (record.arbiter.type !== "Panel") {
+      throw new Error("Escrow does not use panel arbitration");
+    }
+
+    const members = record.arbiter.members ?? [];
+    if (!members.includes(memberAddress)) {
+      throw new Error("Address is not a member of the arbitration panel");
+    }
+
+    const currentSigs = record.arbiter.signatures ?? [];
+    if (currentSigs.includes(memberAddress)) {
+      throw new Error("Member has already signed this verdict");
+    }
+
+    const updatedSigs = [...currentSigs, memberAddress];
+    record.arbiter.signatures = updatedSigs;
+
+    const threshold = record.arbiter.threshold ?? members.length;
+    if (updatedSigs.length >= threshold) {
+      return this.resolveDispute(id, verdict);
+    }
+
+    return { ...record };
+  }
+
+  /**
+   * Extends storage TTL for active escrow.
+   */
+  public extendTtl(id: string, ledgers = 518_400): EscrowRecord {
+    const record = this.getEscrow(id);
+    if (!record) throw new Error(`Escrow #${id} not found`);
+    record.ttlLedgers = (record.ttlLedgers ?? 120_000) + ledgers;
     return { ...record };
   }
 
@@ -198,7 +287,99 @@ class UmbraClientStore {
     }
 
     record.state = "Refunded";
+    record.astrolabeRecord = {
+      amountBucket: computeAmountBucket(record.amount),
+      attestedAt: Date.now(),
+    };
     return { ...record };
+  }
+
+  /**
+   * Collateral Vault operations.
+   */
+  public getVaultPosition(seller: string, asset: string): VaultSellerPosition {
+    const key = `${seller}:${asset}`;
+    let pos = this.vaultPositions.get(key);
+    if (!pos) {
+      pos = {
+        seller,
+        asset,
+        totalCollateral: 100_000_0000000n, // 100k demo tokens
+        lockedCollateral: 20_000_0000000n,
+        availableCollateral: 80_000_0000000n,
+        locks: [
+          {
+            escrowId: "1",
+            amount: 20_000_0000000n,
+            expiresAt: Math.floor(Date.now() / 1000) + 86400,
+          },
+        ],
+      };
+      this.vaultPositions.set(key, pos);
+    }
+    return { ...pos };
+  }
+
+  public depositVault(
+    seller: string,
+    asset: string,
+    amount: bigint,
+  ): VaultSellerPosition {
+    const pos = this.getVaultPosition(seller, asset);
+    pos.totalCollateral += amount;
+    pos.availableCollateral += amount;
+    this.vaultPositions.set(`${seller}:${asset}`, pos);
+    return { ...pos };
+  }
+
+  public withdrawVault(
+    seller: string,
+    asset: string,
+    amount: bigint,
+  ): VaultSellerPosition {
+    const pos = this.getVaultPosition(seller, asset);
+    if (amount > pos.availableCollateral) {
+      throw new Error("Insufficient available unencumbered collateral");
+    }
+    pos.totalCollateral -= amount;
+    pos.availableCollateral -= amount;
+    this.vaultPositions.set(`${seller}:${asset}`, pos);
+    return { ...pos };
+  }
+
+  public lockVault(
+    seller: string,
+    asset: string,
+    amount: bigint,
+    escrowId: string,
+    expiresAt: number,
+  ): VaultSellerPosition {
+    const pos = this.getVaultPosition(seller, asset);
+    if (amount > pos.availableCollateral) {
+      throw new Error("Insufficient unencumbered collateral to lock");
+    }
+    pos.lockedCollateral += amount;
+    pos.availableCollateral -= amount;
+    pos.locks.push({ escrowId, amount, expiresAt });
+    this.vaultPositions.set(`${seller}:${asset}`, pos);
+    return { ...pos };
+  }
+
+  public releaseVaultLock(seller: string, escrowId: string): VaultSellerPosition {
+    for (const [key, pos] of this.vaultPositions.entries()) {
+      if (pos.seller === seller) {
+        const lockIndex = pos.locks.findIndex((l) => l.escrowId === escrowId);
+        if (lockIndex >= 0) {
+          const lock = pos.locks[lockIndex];
+          pos.lockedCollateral -= lock.amount;
+          pos.availableCollateral += lock.amount;
+          pos.locks.splice(lockIndex, 1);
+          this.vaultPositions.set(key, pos);
+          return { ...pos };
+        }
+      }
+    }
+    throw new Error(`Lock for escrow #${escrowId} not found`);
   }
 }
 

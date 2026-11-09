@@ -111,4 +111,59 @@ describe("UmbraClientStore State Machine Transitions", () => {
     const refunded = store.refundCreated("100");
     expect(refunded.state).toBe("Refunded");
   });
+
+  it("extends storage TTL for active escrow", () => {
+    const before = store.getEscrow("100")?.ttlLedgers ?? 0;
+    const extended = store.extendTtl("100", 500_000);
+    expect(extended.ttlLedgers).toBe(before + 500_000);
+  });
+
+  it("handles multi-signer panel verdicts reaching threshold", () => {
+    const member1 = "GMEM1W2N3M5L6K7J8H9G0F1E2D3C4B5A6B7C8D9E0F1A2B3C4D5E6F7A";
+    const member2 = "GMEM2W2N3M5L6K7J8H9G0F1E2D3C4B5A6B7C8D9E0F1A2B3C4D5E6F7A";
+    const panelEscrow: EscrowRecord = {
+      ...mockEscrow,
+      id: "200",
+      state: "Disputed",
+      arbiter: {
+        type: "Panel",
+        members: [member1, member2],
+        threshold: 2,
+        signatures: [],
+      },
+    };
+    store.reset([panelEscrow]);
+
+    // Member 1 signs
+    const after1 = store.signPanelVerdict("200", member1, { type: "RefundBuyer" });
+    expect(after1.state).toBe("Disputed");
+    expect(after1.arbiter.signatures).toEqual([member1]);
+
+    // Member 2 signs -> threshold reached -> resolves!
+    const after2 = store.signPanelVerdict("200", member2, { type: "RefundBuyer" });
+    expect(after2.state).toBe("ResolvedBuyer");
+    expect(after2.astrolabeRecord).toBeDefined();
+  });
+
+  it("manages seller collateral vault positions", () => {
+    const seller = "GSELLER123";
+    const asset = "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC";
+
+    const initial = store.getVaultPosition(seller, asset);
+    expect(initial.availableCollateral).toBe(80_000_0000000n);
+
+    // Deposit
+    const deposited = store.depositVault(seller, asset, 10_000_0000000n);
+    expect(deposited.availableCollateral).toBe(90_000_0000000n);
+
+    // Lock
+    const locked = store.lockVault(seller, asset, 5_000_0000000n, "99", 2_000_000);
+    expect(locked.lockedCollateral).toBe(25_000_0000000n);
+    expect(locked.availableCollateral).toBe(85_000_0000000n);
+
+    // Release Lock
+    const released = store.releaseVaultLock(seller, "99");
+    expect(released.lockedCollateral).toBe(20_000_0000000n);
+    expect(released.availableCollateral).toBe(90_000_0000000n);
+  });
 });
